@@ -1,0 +1,14 @@
+<li>
+	<!-- {{id}}. -->
+
+	<input class="burger" value="{{id}}. {{burger_name}}" readonly>
+
+    {{#if devoured}}
+	    <button class="change-devoured" data-id="{{id}}" data-newdevoured="{{devoured}}">
+		    {{#if devoured}}DEVOUR IT!{{else}}Be uneaten!{{/if}}
+	    </button>
+    {{/if}}
+
+	<!-- <button class="delete-burger" data-id="{{this.id}}">DELETE!</button> -->
+	</div>
+</li>

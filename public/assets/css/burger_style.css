@@ -1,0 +1,26 @@
+.center {
+  
+}
+
+#ca {
+	height: 40px;
+	width: 400px;
+	text-align: center;
+}
+
+body {
+	background: orange;
+}
+
+h1 {
+	color: red;
+}
+
+li {
+	margin: 10px;
+}
+
+.burger {
+	text-align: center;
+	width: 250px;
+}
