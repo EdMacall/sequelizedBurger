@@ -2,21 +2,21 @@
   "development": {
     "username": "root",
     "password": "bosco12345",
-    "database": "blogger",
+    "database": "development_burger2",
     "host": "127.0.0.1",
     "dialect": "mysql"
   },
   "test": {
     "username": "root",
     "password": "bosco12345",
-    "database": "database_test",
+    "database": "database_test_burger2",
     "host": "127.0.0.1",
     "dialect": "mysql"
   },
   "production": {
     "username": "root",
     "password": "bosco12345",
-    "database": "database_production",
+    "database": "database_production_burger2",
     "host": "127.0.0.1",
     "dialect": "mysql"
   }

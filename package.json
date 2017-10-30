@@ -1,5 +1,5 @@
 {
-  "name": "burger",
+  "name": "sequelize-burger",
   "version": "1.0.0",
   "description": "My homework at CWRU",
   "main": "server.js",
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/EdMacall/burger.git"
+    "url": "git+https://github.com/EdMacall/sequelizeBurger.git"
   },
   "author": "Me",
   "license": "ISC",
@@ -22,6 +22,7 @@
     "express": "^4.16.2",
     "express-handlebars": "^3.0.0",
     "method-override": "^2.3.10",
-    "mysql": "^2.15.0"
+    "mysql2": "^1.4.2",
+    "sequelize": "^4.20.1"
   }
 }
