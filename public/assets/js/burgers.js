@@ -21,7 +21,7 @@ $(document).ready(function() {
     getBurgers();
   }
   // This function grabs burgers from the database and updates the view
-  function getBurgers(author) {
+  function getBurgers(eater) {
     eaterId = eater || "";
     if (eaterId) {
       eaterId = "/?eater_id=" + eaterId;
@@ -98,7 +98,7 @@ $(document).ready(function() {
     return newBurgerPanel;
   }
   // This function figures out which post we want to delete and then calls deletePost
-  function handlePostDelete() {
+  function handleBurgerDelete() {
     var currentBurger = $(this)
       .parent()
       .parent()
