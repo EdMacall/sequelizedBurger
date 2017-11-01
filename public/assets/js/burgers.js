@@ -35,6 +35,7 @@ $(document).ready(function() {
       }
     });
   }
+
   // This function does an API call to delete burgers
   function deletePost(id) {
     $.ajax({
@@ -45,6 +46,22 @@ $(document).ready(function() {
       getPosts(postCategorySelect.val());
     });
   }
+
+  // This function does an API call to delete burgers
+  function putPost(id) {
+    var newDevouredState = {
+      devoured: 1
+    };
+    $.ajax({
+      method: "PUT",
+      url: "/api/burgers/" + id,
+      data: newDevouredState
+    })
+    .done(function() {
+      location.reload();
+    });
+  }
+
   // InitializeRows handles appending all of our constructed burger HTML inside burgerContainer
   function initializeRows() {
 
@@ -145,22 +162,25 @@ $(document).ready(function() {
     newBurgerPanel.data("burger", burger);
     return newBurgerPanel;
   }
+
   // This function figures out which post we want to delete and then calls deletePost
   function handleBurgerDelete() {
     var currentBurger = $(this)
       .parent()
       .parent()
       .data("burger");
-    deleteBurger(currentBurger.id);
+    deletePost(currentBurger.id);
   }
+
   // This function figures out which post we want to edit and takes it to the appropriate url
   function handleBurgerEdit() {
     var currentBurger = $(this)
       .parent()
       .parent()
       .data("burger");
-    window.location.href = "/cms?burger_id=" + currentBurger.id;
+    putPost(currentBurger.id);
   }
+
   // This function displays a messgae when there are no posts
   function displayEmpty() {
     uneatenBurgerContainer.empty();
@@ -179,4 +199,32 @@ $(document).ready(function() {
                    "get started.");
     eatenBurgerContainer.append(messageh2);
   }
+
+  $(".create-form").on("submit", function(event) {
+    // Make sure to preventDefault on a submit event.
+    event.preventDefault();
+
+    var ca = $("#ca").val().trim();
+    if(ca !== "" && ca !== null)
+    {
+      var newBurger = {
+        burger_name: ca,
+        devoured: 0
+      };
+
+      // Send the POST request.
+      $.ajax("/api/burgers", {
+        type: "POST",
+        data: newBurger
+      }).then(
+        function() {
+          // console.log?  what for? 
+          // reloading the page will blank out the log
+          console.log("created new burger");
+          // Reload the page to get the updated list
+          location.reload();
+        }
+      );
+    }
+  });
 });

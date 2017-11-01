@@ -40,7 +40,10 @@ module.exports = function(app) {
   });
   // POST route for saving a new burger
   app.post("/api/burgers", function(req, res) {
-    db.Post.create(req.body).then(function(dbBurger) {
+    console.log();
+    console.log(req.body);
+    console.log();
+    db.Burger.create(req.body).then(function(dbBurger) {
       res.json(dbBurger);
     });
   });
@@ -55,12 +58,12 @@ module.exports = function(app) {
     });
   });
   // PUT route for updating burgers
-  app.put("/api/burgers", function(req, res) {
+  app.put("/api/burgers/:id", function(req, res) {
     db.Burger.update(
-      req.body,
+      {devoured: req.body.devoured},
       {
         where: {
-          id: req.body.id
+          id: req.params.id
         }
       }).then(function(dbBurger) {
         res.json(dbBurger);
