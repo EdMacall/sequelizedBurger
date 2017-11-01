@@ -1,8 +1,11 @@
 $(document).ready(function() {
   /* global moment */
   // burgerContainer holds all of our burgers
-  var burgerContainer = $(".burger-container");
-  var burgerCategorySelect = $("#category");
+  // var burgerContainer = $(".burger-container");
+  // var burgerCategorySelect = $("#category");
+
+  var uneatenBurgerContainer = $("#ubc");
+  var   eatenBurgerContainer = $("#ebc");
   // Click events for the edit and delete buttons
   $(document).on("click", "button.delete", handleBurgerDelete);
   $(document).on("click", "button.edit", handleBurgerEdit);
@@ -10,27 +13,22 @@ $(document).ready(function() {
   var burgers;
   // The code below handles the case where we want to get burger burgers for a specific eater
   // Looks for a query param in the url for eater_id
-  var url = window.location.search;
-  var eaterId;
-  if (url.indexOf("?eater_id=") !== -1) {
-    eaterId = url.split("=")[1];
-    getBurgers(eaterId);
-  }
-  // If there's no eaterId we just get all burgers as usual
-  else {
+  // var url = window.location.search;
+  // var eaterId;
+  // if (url.indexOf("?eater_id=") !== -1) {
+  //   eaterId = url.split("=")[1];
+  //   getBurgers(eaterId);
+  // }
+  // // If there's no eaterId we just get all burgers as usual
+  // else {
     getBurgers();
-  }
+  // }
   // This function grabs burgers from the database and updates the view
-  function getBurgers(eater) {
-    eaterId = eater || "";
-    if (eaterId) {
-      eaterId = "/?eater_id=" + eaterId;
-    }
-    $.get("/api/burgers" + eaterId, function(data) {
-      console.log("Burgers", data);
+  function getBurgers() {
+    $.get("/api/burgers", function(data) {
       burgers = data;
+      displayEmpty();
       if (!burgers || !burgers.length) {
-        displayEmpty(eater);
       }
       else {
         initializeRows();
@@ -49,14 +47,64 @@ $(document).ready(function() {
   }
   // InitializeRows handles appending all of our constructed burger HTML inside burgerContainer
   function initializeRows() {
-    burgerContainer.empty();
-    var burgersToAdd = [];
-    for (var i = 0; i < posts.length; i++) {
-      burgersToAdd.push(createNewRow(burgers[i]));
+
+    var uneatenBurgersToAdd = [];
+    var   eatenBurgersToAdd = [];
+    for (var i = 0; i < burgers.length; i++) {
+      if(burgers[i].devoured)
+      {
+        eatenBurgersToAdd.push(createNewEatenRow(burgers[i]));
+      }
+      else
+      {
+        uneatenBurgersToAdd.push(createNewUneatenRow(burgers[i]));
+      }
+      // burgersToAdd.push(createNewRow(burgers[i]));
     }
-    burgerContainer.append(burgersToAdd);
+
+    if(uneatenBurgersToAdd.length){
+      uneatenBurgerContainer.empty();
+      uneatenBurgerContainer.append(uneatenBurgersToAdd);
+    }
+    if(eatenBurgersToAdd.length){
+      eatenBurgerContainer.empty();
+      eatenBurgerContainer.append(eatenBurgersToAdd);
+    }
   }
   // This function constructs a burger's HTML
+  function createNewEatenRow(burger) {
+    var newBurgerPanel = $("<div>");
+    newBurgerPanel.addClass("panel panel-default");
+    var newBurgerPanelHeading = $("<div>");
+    newBurgerPanelHeading.addClass("panel-heading");
+    var newBurgerTitle = $("<h2>");
+    newBurgerTitle.text(burger.id + ". " + burger.burger_name);
+    newBurgerPanelHeading.append(newBurgerTitle);
+    newBurgerPanel.append(newBurgerPanelHeading);
+    newBurgerPanel.data("burger", burger);
+    return newBurgerPanel;
+  }
+
+  function createNewUneatenRow(burger) {
+    var newBurgerPanel = $("<div>");
+    newBurgerPanel.addClass("panel panel-default");
+    var newBurgerPanelHeading = $("<div>");
+    newBurgerPanelHeading.addClass("panel-heading");
+    var editBtn = $("<button>");
+    editBtn.text("Devour It!");
+    editBtn.addClass("edit btn btn-info");
+    editBtn.css({
+      float: "right"
+    });
+    var newBurgerTitle = $("<h2>");
+    newBurgerTitle.text(burger.id + ". " + burger.burger_name);
+    newBurgerPanelHeading.append(editBtn);
+    newBurgerPanelHeading.append(newBurgerTitle);
+    newBurgerPanel.append(newBurgerPanelHeading);
+    newBurgerPanel.data("burger", burger);
+    return newBurgerPanel;
+  }
+
   function createNewRow(burger) {
     var formattedDate = new Date(burger.createdAt);
     formattedDate = moment(formattedDate).format("MMMM Do YYYY, h:mm:ss a");
@@ -114,17 +162,21 @@ $(document).ready(function() {
     window.location.href = "/cms?burger_id=" + currentBurger.id;
   }
   // This function displays a messgae when there are no posts
-  function displayEmpty(id) {
-    var query = window.location.search;
-    var partial = "";
-    if (id) {
-      partial = " for Eater #" + id;
-    }
-    burgerContainer.empty();
+  function displayEmpty() {
+    uneatenBurgerContainer.empty();
     var messageh2 = $("<h2>");
     messageh2.css({ "text-align": "center", "margin-top": "50px" });
-    messageh2.html("No burgers yet" + partial + ", navigate <a href='/cms" + query +
-    "'>here</a> in order to get started.");
-    burgerContainer.append(messageh2);
+    messageh2.html("There are no uneaten burgers yet.<br>Submit some burgers in order to get started.");
+    uneatenBurgerContainer.append(messageh2);
+
+    eatenBurgerContainer.empty();
+    messageh2 = $("<h2>");
+    messageh2.css({ "text-align": "center", "margin-top": "50px" });
+    messageh2.html("There are no eaten burgers yet.<br>" +
+                   "Fill out a name of an eater and<br>" +
+                   "click on the devour buttons of<br>" +
+                   "some uneaten burgers in order to<br>" + 
+                   "get started.");
+    eatenBurgerContainer.append(messageh2);
   }
 });
